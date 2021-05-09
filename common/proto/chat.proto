@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option go_package = "common/pb";
+
+package chat;
+
+enum MessageId {
+  None                      = 0;
+  LoginRequest              = 1;                // 登陆请求
+  LoginResponse             = 2;                // 登陆返回
+  EnterChannelRequest       = 3;                // 进入聊天室请求
+  EnterChannelResponse      = 4;                // 进入聊天室返回
+  LeaveChannelRequest       = 5;                // 离开聊天室请求
+  LeaveChannelResponse      = 6;                // 离开聊天室返回
+  ChatRequest               = 7;                // 聊天请求
+  ChatResponse              = 8;                // 聊天返回
+  UserActionNotify          = 21;                // 聊天室用户状态同步
+}
+
+message LoginRequestMessage {
+  string     username = 1;
+}
+
+enum Result {
+  Success                 = 0;
+  Error                   = 1;
+  DuplicatedName          = 2;
+  NotFoundUser            = 3;
+  
+  AlreadyInChannel        = 21;                         // 用户已经在频道内
+}
+
+message LoginResponseMessage {
+  Result result = 1;
+}
+
+message ChatContent {
+  string      user = 1;
+  string      words = 2;
+}
+
+message EnterChannelRequestMessage {
+  string     channelName = 1;
+}
+
+message EnterChannelResponseMessage {
+  Result                  result = 1;
+  string                  channelName = 2;
+  repeated string         users = 3;
+  repeated ChatContent    contents = 4;
+}
+
+message LeaveChannelRequestMessage {
+}
+
+message LeaveChannelResponseMessage {
+  Result            result = 1;
+}
+
+message ChatRequestMessage {
+  string    message = 1;
+}
+
+message ChatResponseMessage {
+  string    username = 1;
+  string    message = 2;
+}
+
+enum UserActionType {
+    EnterChannel      = 0;                 // 进入房间
+    LeaveChannel      = 1;                 // 离开房间
+}
+
+message UserActionNotifyMessage {
+    UserActionType    type = 1;
+    string            username = 2;
+}
