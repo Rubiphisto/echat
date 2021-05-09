@@ -23,7 +23,7 @@ func (s *SessionStateChannel) OnEnter() {
 	_ = s.AddHandler(pb.MessageId_ChatResponse, s.onMessage)
 	_ = s.AddHandler(pb.MessageId_LeaveChannelResponse, s.onLeaveChannel)
 	_ = s.AddHandler(pb.MessageId_UserActionNotify, s.onUserAction)
-	console.NewConsole().AddHandler("chat", s.cmdChat)
+	console.NewConsole().AddHandler("say", s.cmdChat)
 	console.NewConsole().AddHandler("leave", s.cmdLeaveChannel)
 	logger.Info("ENTER CHANNEL")
 }
@@ -32,7 +32,7 @@ func (s *SessionStateChannel) OnExit() {
 	s.DelHandler(pb.MessageId_ChatResponse)
 	s.DelHandler(pb.MessageId_LeaveChannelResponse)
 	s.DelHandler(pb.MessageId_UserActionNotify)
-	console.NewConsole().DelHandler("chat")
+	console.NewConsole().DelHandler("say")
 	console.NewConsole().DelHandler("leave")
 	logger.Info("LEAVE CHANNEL")
 }
@@ -53,7 +53,7 @@ func (s *SessionStateChannel) onMessage(_ uint32, data []byte) error {
 	if err := proto.Unmarshal(data, resp); nil != err {
 		return err
 	}
-	
+
 	fmt.Printf("%s says: %s.\n", resp.Username, resp.Message)
 	return nil
 }
@@ -89,4 +89,3 @@ func (s *SessionStateChannel) onUserAction(_ uint32, data []byte) error {
 	}
 	return nil
 }
-
